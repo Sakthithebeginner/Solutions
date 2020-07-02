@@ -1,40 +1,79 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
+
 using namespace std;
 
-void swap(int *x,int *y){
-    int t;
-    t=*x;
-    *x=*y;
-    *y=t;
+vector<string> split_string(string);
+
+// Complete the maximumToys function below.
+int maximumToys(vector<int> prices, int k) {
+ sort(prices.begin(), prices.end());
+    int i=0;
+    while(k>0)
+        k-=prices[i++];
+    return i-1;
+
 }
-void sort(int a[],int n){
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n-1;j++){
-            if(a[j]>a[j+1]){
-                swap(&a[j],&a[j+1]);
-            }
-        }
+
+int main()
+{
+    ofstream fout(getenv("OUTPUT_PATH"));
+
+    string nk_temp;
+    getline(cin, nk_temp);
+
+    vector<string> nk = split_string(nk_temp);
+
+    int n = stoi(nk[0]);
+
+    int k = stoi(nk[1]);
+
+    string prices_temp_temp;
+    getline(cin, prices_temp_temp);
+
+    vector<string> prices_temp = split_string(prices_temp_temp);
+
+    vector<int> prices(n);
+
+    for (int i = 0; i < n; i++) {
+        int prices_item = stoi(prices_temp[i]);
+
+        prices[i] = prices_item;
     }
-}
-int nooftoy(int a[],int n,int money){
-    sort(a,n);
-    int sum=0,i;
-    for(i=0;i<n;i++){
-        sum+=a[i];
-        if(sum>money){
-            return i;
-        }
-    }
-    return i;
-}
-int main(){
-    int n,money;
-    cin>>n>>money;
-    int toy[n];
-    for(int i=0;i<n;i++){
-        cin>>toy[i];
-    }
-    int nos=nooftoy(toy,n,money);
-    cout<<nos;
+
+    int result = maximumToys(prices, k);
+
+    fout << result << "\n";
+
+    fout.close();
+
     return 0;
+}
+
+vector<string> split_string(string input_string) {
+    string::iterator new_end = unique(input_string.begin(), input_string.end(), [] (const char &x, const char &y) {
+        return x == y and x == ' ';
+    });
+
+    input_string.erase(new_end, input_string.end());
+
+    while (input_string[input_string.length() - 1] == ' ') {
+        input_string.pop_back();
+    }
+
+    vector<string> splits;
+    char delimiter = ' ';
+
+    size_t i = 0;
+    size_t pos = input_string.find(delimiter);
+
+    while (pos != string::npos) {
+        splits.push_back(input_string.substr(i, pos - i));
+
+        i = pos + 1;
+        pos = input_string.find(delimiter, i);
+    }
+
+    splits.push_back(input_string.substr(i, min(pos, input_string.length()) - i + 1));
+
+    return splits;
 }
